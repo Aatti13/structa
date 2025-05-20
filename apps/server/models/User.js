@@ -1,5 +1,7 @@
 import { v4 } from "uuid";
 import { getDB } from "../db.js";
+import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 
 const db = getDB();

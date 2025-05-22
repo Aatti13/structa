@@ -1,4 +1,10 @@
-import { register, loginUser, logout } from "../controllers/auth.controlle.js";
+import { 
+  register, 
+  loginUser,
+  logoutUser, 
+  forgotPassword, 
+  resetPassword
+} from "../controllers/auth.controller.js";
 import { Router } from "express";
 
 const router = Router();
@@ -11,6 +17,12 @@ const router = Router();
 */
 router.post("/register", register);
 router.post("/login", loginUser);
-router.post("/logout", logout);
+
+
+router.post("/logout", logoutUser);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password/:token",resetPassword);
+
+export default router;
 
 // API Endpoint: GET /api/auth

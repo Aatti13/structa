@@ -1,52 +1,40 @@
-import { v4 } from "uuid";
-import { getDB } from "../db.js";
-import bcrypt from "bcrypt";
-import crypto from "crypto";
+import mongoose from "mongoose";
 
-
-const db = getDB();
-
-export default {
-  async create({username, email, passwordHash, avatarURL = '', bio = ''}) {
-    const doc = {
-      _id: v4(),
-      type: 'user',
-      username, 
-      email,
-      passwordHash,
-      avatarURL,
-      bio,
-      createdAt: new Date().toString(),
-    };
-    await db.insert(doc);
-    return doc;
+export const UserSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true
   },
-
-  async updateProfile(id, updates) {
-    const existing = await db.get(id);
-    const updated = {...existing, ...updates};
-
-    await db.insert(updated);
-    return updated;
+  email: {
+    type: String,
+    required: true,
+    unique: true
   },
-
-  async findByEmail(email) {
-    const result = await db.find({
-      selector: {type: 'user', email},
-      limit: 1,
-    });
-    return result.docs[0];
+  passwordHash: {
+    type: String,
+    required: true
   },
-
-  async findByUsername(username) {
-    const result = await db.find({
-      selector: {type: 'user', username},
-      limit: 1,
-    });
-    return result.docs[0];
+  avatar: {
+    type: String,
+    default: null
   },
-
-  async get(id) {
-    return await db.get(id);
+  server: [{type: mongoose.Schema.Types.ObjectId, ref: 'Server'}],
+  friends: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+  status: {
+    type:String,
+    enum: ['online', 'offline', 'afk'],
+    default: 'offline'
   },
-};
+  twoFactorEnabled: {
+    type: Boolean,
+    default: false
+  },
+  createdAt: { 
+    type: Date, 
+    default: Date.now 
+  }
+}, {timestamps: true});
+
+const User = mongoose.model("User", UserSchema);
+export default User;

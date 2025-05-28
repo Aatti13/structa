@@ -126,9 +126,28 @@ export const logout = async (req, res)=>{
   }
 }
 
-export const onboard = (req, res)=>{
+// Updating User in both MongoDB and Stream
+export const onboard = async (req, res)=>{
   try{
-    console.log("Onboard Controller function");
+    const userId = req.user._id;
+    const { username, bio, location, nativeLanguage} = req.body;
+    // Create Alternate Where it shows which field is mandatory.
+    if(!username || !bio || !location || !nativeLanguage){
+      return handleCustomError(res, 400, "All Fields are Mandatory");
+    }
+
+    const updateUser = await User.findByIdAndUpdate(userId, {
+      ...req.body,
+      isOnboarded: true
+    }, {new: true});
+
+    if(!updateUser) return handleCustomError(res, 404, "User Not Found");
+
+    res.status(201).json({
+      success: true,
+      user: updateUser
+    });
+
   }catch(error){
     return handleServerError(res, error);
   }

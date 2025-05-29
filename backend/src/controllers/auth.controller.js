@@ -126,7 +126,6 @@ export const logout = async (req, res)=>{
   }
 }
 
-// Updating User in both MongoDB and Stream
 export const onboard = async (req, res)=>{
   try{
     const userId = req.user._id;
@@ -138,10 +137,22 @@ export const onboard = async (req, res)=>{
 
     const updateUser = await User.findByIdAndUpdate(userId, {
       ...req.body,
-      isOnboarded: true
+      isVerified: true
     }, {new: true});
 
     if(!updateUser) return handleCustomError(res, 404, "User Not Found");
+
+    try{
+      await upsertStreamUser({
+        id: updateUser._id.toString(),
+        name: updateUser.username,
+        image: updateUser.avatar
+      });
+
+      console.log(`Updatef user for: ${updateUser.username}`);
+    }catch(error){
+      return handleCustomError(res, 410, "Error Updating User in Stream");
+    }
 
     res.status(201).json({
       success: true,
@@ -150,5 +161,13 @@ export const onboard = async (req, res)=>{
 
   }catch(error){
     return handleServerError(res, error);
+  }
+}
+
+export const checkAuth = (req, res)=>{
+  try{
+    res.status(200).json({success: true, user: req.user});
+  }catch(error){
+    return handleServerError(res, error, 502, "No Token Provided");
   }
 }

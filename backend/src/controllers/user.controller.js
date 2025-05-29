@@ -103,3 +103,35 @@ export const acceptFriendReq = async (req, res)=>{
     return handleServerError(readFileAsArrayBuffer, error);
   }
 }
+
+export const getFriendRequests = async (req, res)=>{
+  try{
+    const incomingFriendReq = await FriendReq.find({
+      receiver: req.user.id,
+      status: "pending"
+    }).populate("sender", "username avatar nativeLanguage location");
+
+    const acceptedReq = await FriendReq.find({
+      sender: req.user.id,
+      status: "accepted"
+    }).populate("receiver", "username avatar");
+
+    res.status(200).json({incomingFriendReq, acceptedReq});
+
+  }catch(error){
+    return handleServerError(res, error);
+  }
+}
+
+export const getOutgoingFriendRequests = async (req, res)=>{
+  try{
+    const outgoingRequests = await FriendReq.find({
+      sender: req.user.id,
+      status: "pending",
+    }).populate("receiver", "username avatar nativeLanguage location");
+
+    res.status(200).json(outgoingRequests);
+  }catch(error){
+    return handleServerError(res, error);
+  }
+}

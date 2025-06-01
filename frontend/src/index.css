@@ -4,7 +4,13 @@
 }
 
 :root {
-  --bg-black: #000000
+  --bg-black: #000000;
+  --bright-blue: #0096FF;
+  --blue: #0000FF;
+  --indigo: #3F00FF;
+  --dark-blue: #00008B;
+  --egyptian-blue: #1434A4;
+  --cyan-blue: #00FFFF;
 }
 
 .b-r-left {
@@ -32,4 +38,22 @@
 .text-input {
   border: 2px solid white;
   border-radius: 6px;
+}
+
+a {
+  color: var(--indigo);
+  transition: color 0.3s ease; 
+}
+
+a:hover {
+  color: greenyellow;
+}
+
+.submit {
+  background-color: var(--indigo);
+  transition: background-color 0.3s ease;
+}
+
+.submit:hover {
+  background-color: var(--cyan-blue);
 }

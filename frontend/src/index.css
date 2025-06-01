@@ -1,0 +1,35 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: all;
+}
+
+:root {
+  --bg-black: #000000
+}
+
+.b-r-left {
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+}
+
+.b-r-right {
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.bg-black-clr {
+  background-color: var(--bg-black);
+}
+
+.signup-card {
+  transition: box-shadow 0.3s ease;
+}
+
+.signup-card:hover {
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.4);
+}
+
+.text-input {
+  border: 2px solid white;
+  border-radius: 6px;
+}
